@@ -18,4 +18,18 @@ const calculateBmi = (height: number, weight: number): string =>{
   }
 }
 
-console.log(calculateBmi(180, 74))
+const parseArgs = (args: Array<string>): [number, number] => {
+  if(args.length > 4){
+    throw new Error('Wrong number of arguments')
+  }
+  
+  return [Number(args[2]), Number(args[3])]
+}
+
+try {
+  const args = parseArgs(process.argv)
+  console.log(calculateBmi(args[0], args[1]))
+}
+catch (e) {
+  console.log('Error, something bad happened, message: ', e.message);
+}
