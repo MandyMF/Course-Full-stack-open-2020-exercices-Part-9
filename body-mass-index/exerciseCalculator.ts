@@ -8,7 +8,7 @@ interface Result{
   average: number
 }
 
-const calculateExercises = (dailyExercises: Array<number>, targetAmount: number): Result =>{
+export const calculateExercises = (dailyExercises: Array<number>, targetAmount: number): Result =>{
   const data: Result = {
     periodLength: dailyExercises.length,
     trainingDays: dailyExercises.filter(h => h != 0).length,
