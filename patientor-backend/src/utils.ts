@@ -1,4 +1,4 @@
-import {NewPatient} from './types';
+import {NewPatient, Gender} from './types';
 
 const toNewPatient = (object: Record<string, unknown>) : NewPatient =>{
   return {
@@ -31,9 +31,9 @@ const parseSsn = (ssn: any): string => {
   return ssn;
 };
 
-const parseGender = (gender: any): string => {
-  if( !gender || !isString(gender)){
-    throw new Error('Incorrect or missing occupation: '+ JSON.stringify(gender));
+const parseGender = (gender: any): Gender => {
+  if( !gender || !isGender(gender)){
+    throw new Error('Incorrect or missing gender: '+ JSON.stringify(gender));
   }
   return gender;
 };
@@ -51,6 +51,10 @@ const isString = (text: any): text is string => {
 
 const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
+};
+
+const isGender = (gender: any): gender is Gender => {
+  return Object.values(Gender).includes(gender);
 };
 
 export default toNewPatient;

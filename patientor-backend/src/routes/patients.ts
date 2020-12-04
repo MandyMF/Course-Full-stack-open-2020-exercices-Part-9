@@ -9,9 +9,14 @@ router.get('/', (_req, res)=>{
 });
 
 router.post('/', (req, res)=>{
+  try{
   const newPatient = toNewPatient(req.body);
   const addedPatient = patientsServices.addPatient(newPatient);
   res.json(addedPatient);
+  }
+  catch(e){
+    res.status(400).send((e as Record<string, string>)?.message);
+  }
 });
 
 export default router;
