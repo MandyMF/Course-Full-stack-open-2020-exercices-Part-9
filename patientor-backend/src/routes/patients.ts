@@ -4,6 +4,14 @@ import toNewPatient from '../utils';
 
 const router = express.Router();
 
+router.get('/:id', (req, res)=>{
+  const patient = patientsServices.getPatientById( req.params.id);
+  if(!patient){
+    res.send().status(404);
+  }
+  res.send(patient);
+});
+
 router.get('/', (_req, res)=>{
   res.send(patientsServices.getPatients());
 });
