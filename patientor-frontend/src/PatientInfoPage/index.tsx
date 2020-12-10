@@ -7,7 +7,7 @@ import { Icon } from "semantic-ui-react";
 
 const PatientInfoPage: React.FC = () => {
   const { id } = useParams<{id: string}>();
-  const [{ patient }, dispatch] = useStateValue();
+  const [{ patient, diagnoses }, dispatch] = useStateValue();
 
   React.useEffect(() => {
     const getPatientById = async () =>{
@@ -50,7 +50,10 @@ const PatientInfoPage: React.FC = () => {
       <div key={entry.id}>
         <div><span>{entry.date}{" "}{entry.description}</span></div>
         <ul>
-          {entry.diagnosisCodes?.map(code => <li key={code}>{code}</li>)}
+    {entry.diagnosisCodes?.map(code => 
+    <li key={code}>{code}{" "}
+      {diagnoses.find(dignosis=> dignosis.code === code)?.name}
+    </li>)}
         </ul>
       </div>)
     )}

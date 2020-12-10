@@ -5,20 +5,20 @@ export enum Gender {
 }
 
 export interface Diagnosis {
-  code: string,
-  name: string,
+  code: string;
+  name: string;
   latin?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 
 export interface Patient {
-  id: string,
-  name: string,
-  dateOfBirth: string,
-  ssn: string,
-  gender: Gender,
-  occupation: string,
+  id: string;
+  name: string;
+  dateOfBirth: string;
+  ssn: string;
+  gender: Gender;
+  occupation: string;
   entries: Entry[]
 }
 
@@ -48,7 +48,7 @@ export interface HealthCheckEntry extends BaseEntry {
 
 export interface OccupationalHealthCareEntry extends BaseEntry {
   type: "OccupationalHealthcare"
-  employerName: string,
+  employerName: string;
   sickLeave?: SickLeave
 }
 
@@ -58,12 +58,12 @@ export interface HospitalEntry extends BaseEntry {
 }
 
 export interface SickLeave {
-  startDate: string,
+  startDate: string;
   endDate: string
 }
 
 export interface Discharge {
-  date: string,
+  date: string;
   criteria: string
 }
 
