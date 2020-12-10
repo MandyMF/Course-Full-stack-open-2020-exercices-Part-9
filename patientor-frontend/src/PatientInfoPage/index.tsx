@@ -3,7 +3,12 @@ import {useParams} from 'react-router-dom';
 import {useStateValue, setPatient} from '../state'; 
 import axios from 'axios';
 import { apiBaseUrl } from "../constants";
-import { Icon } from "semantic-ui-react";
+import { Icon, Table, Header } from "semantic-ui-react";
+import HospitalEntryExtra from './HospitalEntryExtra';
+import OccupationalHealthCareEntryExtra from './OccupationalHealthCareEntryExtra';
+import HealthCheckEntryExtra from './HealthCheckEntryExtra';
+import { Entry } from '../types';
+import {assertNever} from "../utils";
 
 const PatientInfoPage: React.FC = () => {
   const { id } = useParams<{id: string}>();
@@ -37,6 +42,19 @@ const PatientInfoPage: React.FC = () => {
     }
   };
 
+  const entryExtraData = (entry: Entry) =>{
+    switch(entry.type){
+      case "HealthCheck":
+        return <HealthCheckEntryExtra entry={entry} />;
+      case "Hospital":
+        return <HospitalEntryExtra entry={entry} />;
+      case "OccupationalHealthcare":
+        return <OccupationalHealthCareEntryExtra entry={entry} />;
+      default: 
+        return assertNever(entry);
+    }
+  };
+
   return (
   <section>
     <h2>
@@ -45,19 +63,27 @@ const PatientInfoPage: React.FC = () => {
     {patient?.ssn ? <div><span>ssn: {patient?.ssn}</span></div>: <></>}
     <div><span>occupation: {patient?.occupation}</span></div>
 
-    <h3>entries</h3>
+    <h3>entries:</h3>
+    <Table>
+      <Table.Body>
     {patient?.entries.map( entry => (
-      <div key={entry.id}>
-        <div><span>{entry.date}{" "}{entry.description}</span></div>
+      <Table.Row key={entry.id}>
+        <Table.Cell key={entry.id + "cell"}>
+        <Header>{entry.date}</Header>
+        {entryExtraData(entry)}
+        <div><span>{entry.description}</span></div>
         <ul>
     {entry.diagnosisCodes?.map(code => 
     <li key={code}>{code}{" "}
       {diagnoses.find(dignosis=> dignosis.code === code)?.name}
     </li>)}
-        </ul>
-      </div>)
+        </ul>   
+        </Table.Cell>
+      </Table.Row>)
     )}
-  </section>
+    </Table.Body>
+    </Table>
+    </section>
   );
 };
 

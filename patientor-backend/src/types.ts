@@ -54,7 +54,7 @@ export interface OccupationalHealthCareEntry extends BaseEntry {
 
 export interface HospitalEntry extends BaseEntry {
   type: "Hospital"
-  discharge?: Discharge
+  discharge: Discharge
 }
 
 export interface SickLeave {
@@ -69,3 +69,6 @@ export interface Discharge {
 
 export type Entry = HospitalEntry |
 OccupationalHealthCareEntry | HealthCheckEntry;
+
+export type NewEntry = Omit<HospitalEntry, 'id'> |
+Omit<OccupationalHealthCareEntry, 'id'> | Omit<HealthCheckEntry,'id'>;

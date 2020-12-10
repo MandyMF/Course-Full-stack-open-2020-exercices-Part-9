@@ -1,5 +1,6 @@
-import {PublicPatient, NewPatient, Patient} from '../types';
+import {PublicPatient, NewPatient, Patient, NewEntry, Entry} from '../types';
 import patientsData from '../../data/patients';
+import uniqid from 'uniqid';
 
 const getPatients = (): PublicPatient[] =>{
   return patientsData.map(
@@ -39,9 +40,22 @@ const addPatient = (patient: NewPatient): Patient => {
   return newPatient;
 };
 
+const addEntryForPatient = (patient: Patient ,entry: NewEntry): Patient => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const newId = uniqid() as string;
+  const toAddEntry: Entry = {
+    id: newId,
+    ...entry
+  };
+
+  patient.entries.push(toAddEntry);
+  return patient;
+};
+
 export default {
   getPatients,
   addPatient,
-  getPatientById
+  getPatientById,
+  addEntryForPatient
 };
 
