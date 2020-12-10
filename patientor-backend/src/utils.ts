@@ -1,4 +1,4 @@
-import {NewPatient, Gender} from './types';
+import {NewPatient, Gender, Entry} from './types';
 
 const toNewPatient = (object: Record<string, unknown>) : NewPatient =>{
   return {
@@ -7,7 +7,7 @@ const toNewPatient = (object: Record<string, unknown>) : NewPatient =>{
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseOcupation(object.occupation),
-    entries:[]
+    entries: parseEntry(object.entries)
   };
 };
 
@@ -46,6 +46,16 @@ const parseOcupation = (occupation: any): string => {
   return occupation;
 };
 
+const parseEntry = (entries: any): Entry[] => {
+  if(!entries) return [];
+  return (entries as any[]).map((entry: any)=>{
+    if(!isEntryByType(entry)){
+      throw new Error(`Error on entries ${JSON.stringify(entries)}`);
+    }
+    return entry;
+  });
+};
+
 const isString = (text: any): text is string => {
   return typeof text ==='string' || text instanceof String;
 };
@@ -56,6 +66,10 @@ const isDate = (date: string): boolean => {
 
 const isGender = (gender: any): gender is Gender => {
   return Object.values(Gender).includes(gender);
+};
+
+const isEntryByType = (entry: Record<string, any>): entry is Entry =>{
+  return entry.type === "HealthCheck" || entry.type === "OccupationalHealthcare" || entry.type === "Hospital";
 };
 
 export default toNewPatient;

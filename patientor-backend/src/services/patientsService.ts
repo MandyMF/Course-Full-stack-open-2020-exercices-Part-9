@@ -23,7 +23,7 @@ const getPatients = (): PublicPatient[] =>{
 const getPatientById = (patientId: string): Patient | undefined =>{
   let patient = patientsData.find(({id})=> id === patientId);
 
-  if(patient && patient?.entries){
+  if(patient && !patient?.entries){
     patient = {...patient, entries:[]};
   }
 
