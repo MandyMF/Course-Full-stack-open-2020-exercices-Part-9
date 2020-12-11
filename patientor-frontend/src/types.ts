@@ -61,6 +61,11 @@ export interface Discharge {
   criteria: string;
 }
 
+export enum EntryType {
+  Hospital= "Hospital",
+  OccupationalHealthcare="OccupationalHealthcare",
+  HealthCheck="HealthCheck"
+}
 
 export type Entry = HospitalEntry |
 OccupationalHealthCareEntry | HealthCheckEntry;

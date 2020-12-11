@@ -10,8 +10,8 @@ const HospitalEntryExtra: React.FC<{entry: HospitalEntry}> = ({entry})=>{
     <h1><Icon name="plus square" color="red"></Icon></h1>
     { entry.discharge &&
     <div>
-    Discharge Date: <strong>{entry.discharge?.date}</strong>
-    <p>{entry.discharge?.criteria}</p>
+    <strong>Discharge Date: {entry.discharge?.date}</strong>
+    <p><strong>Criteria:</strong> {entry.discharge?.criteria}</p>
     </div>
     } 
   </section>

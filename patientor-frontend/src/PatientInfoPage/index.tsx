@@ -1,18 +1,31 @@
 import React from 'react';
 import {useParams} from 'react-router-dom';
-import {useStateValue, setPatient} from '../state'; 
+import {useStateValue, setPatient, addEntry} from '../state'; 
 import axios from 'axios';
 import { apiBaseUrl } from "../constants";
-import { Icon, Table, Header } from "semantic-ui-react";
+import { Icon, Table, Header, Button } from "semantic-ui-react";
 import HospitalEntryExtra from './HospitalEntryExtra';
 import OccupationalHealthCareEntryExtra from './OccupationalHealthCareEntryExtra';
 import HealthCheckEntryExtra from './HealthCheckEntryExtra';
-import { Entry } from '../types';
+import { Entry, Patient, EntryType } from '../types';
 import {assertNever} from "../utils";
+import {EntryFormValues} from "../AddEntryModal/AddEntryForm";
+import AddEntryModal from "../AddEntryModal";
+
 
 const PatientInfoPage: React.FC = () => {
   const { id } = useParams<{id: string}>();
   const [{ patient, diagnoses }, dispatch] = useStateValue();
+
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
 
   React.useEffect(() => {
     const getPatientById = async () =>{
@@ -25,6 +38,7 @@ const PatientInfoPage: React.FC = () => {
       }
     };
 
+    
     if(!patient || patient?.id !== id){
       getPatientById();
     }
@@ -55,6 +69,28 @@ const PatientInfoPage: React.FC = () => {
     }
   };
 
+  const submitNewEntry = async (newEntryValues: EntryFormValues) => {
+
+    let entryToSubmit =  Object.assign(newEntryValues);
+
+    if(newEntryValues.type === EntryType.OccupationalHealthcare){    
+      if(entryToSubmit.sickLeave.startDate==="" && entryToSubmit.sickLeave.endDate==="")
+      {
+        entryToSubmit = {...entryToSubmit, sickLeave: undefined};
+      }
+    }
+
+    try{
+      const {data: newEntry} = await axios.post<Patient>(`${apiBaseUrl}/patients/${id}/entries`, entryToSubmit);
+      dispatch(addEntry(newEntry));
+      closeModal();
+    }
+    catch(error){
+      console.error(error.response.data);
+      setError(error.response.data.error);
+    }  
+  };
+
   return (
   <section>
     <h2>
@@ -71,7 +107,7 @@ const PatientInfoPage: React.FC = () => {
         <Table.Cell key={entry.id + "cell"}>
         <Header>{entry.date}</Header>
         {entryExtraData(entry)}
-        <div><span>{entry.description}</span></div>
+        <div><span><strong>Description:</strong> {entry.description}</span></div>
         <ul>
     {entry.diagnosisCodes?.map(code => 
     <li key={code}>{code}{" "}
@@ -83,6 +119,14 @@ const PatientInfoPage: React.FC = () => {
     )}
     </Table.Body>
     </Table>
+
+    <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewEntry}
+        error={error}
+        onClose={closeModal}
+      />
+    <Button onClick={() => openModal()}>Add New Entry</Button>
     </section>
   );
 };
